@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ImagesWebApi.Models;
 
 namespace ImagesWebApi.Services
 {
     public interface ICarouselImageService
     {
-        IEnumerable<CarouselImage> GetImages();
+       Task<IEnumerable<CarouselImage>> GetImages();
     }
 }

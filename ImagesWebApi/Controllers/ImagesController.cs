@@ -11,7 +11,7 @@ namespace ImagesWebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ImagesController : ControllerBase
+    public class ImagesController : Controller
     {
 
         private readonly ILogger<ImagesController> _logger;
@@ -24,6 +24,6 @@ namespace ImagesWebApi.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<CarouselImage> Get() => _carouselImageService.GetImages();
+        public async Task<IEnumerable<CarouselImage>> Get() => await _carouselImageService.GetImages();
     }
 }

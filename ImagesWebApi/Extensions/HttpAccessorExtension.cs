@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.AspNetCore.Http;
 
 namespace ImagesWebApi.Extensions
@@ -9,6 +10,11 @@ namespace ImagesWebApi.Extensions
         {
             var request = httpContextAccessor.HttpContext.Request;
             return $"{request.Scheme}://{request.Host}";
+        }
+        
+        public static string GetFilePath(this IHttpContextAccessor httpContextAccessor, string fileName)
+        {
+            return Path.Combine(httpContextAccessor.GetUrl(), "StaticFiles", fileName);
         }
         
     }

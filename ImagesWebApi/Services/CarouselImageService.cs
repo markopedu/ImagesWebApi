@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using ImagesWebApi.Extensions;
 using ImagesWebApi.Models;
 using Microsoft.AspNetCore.Hosting;
@@ -17,38 +18,50 @@ namespace ImagesWebApi.Services
         {
             _accessor = accessor;
         }
-
-        private string GetFilePath(string fileName)
-        {
-            return Path.Combine(_accessor.GetUrl(), "StaticFiles", fileName);
-        }
         
-        public IEnumerable<CarouselImage> GetImages()
+        public async Task<IEnumerable<CarouselImage>> GetImages()
         {
             var ciList = new List<CarouselImage>
             {
                 new CarouselImage
                 {
-                    ImgUrl = GetFilePath("nature1.jpg"),
+                    ImgUrl = _accessor.GetFilePath("nature1.jpg"),
                     Description= "Nature Sea 1",
                     Attribution= "John Doe"
                 },
                 new CarouselImage
                 {
-                    ImgUrl = GetFilePath("nature2.jpg"),
+                    ImgUrl = _accessor.GetFilePath("nature2.jpg"),
                     Description= "Nature Sea 2",
                     Attribution= "Matti Nätti"
                 },
                 new CarouselImage
                 {
-                    ImgUrl = GetFilePath("nature3.jpg"),
+                    ImgUrl = _accessor.GetFilePath("nature3.jpg"),
                     Description= "Nature 3",
                     Attribution= "Kalle Anka"
                 },
+                new CarouselImage
+                {
+                    ImgUrl = _accessor.GetFilePath("helsinki.jpg"),
+                    Description= "Helsinki",
+                    Attribution= "Sanna Mattinen"
+                },
+                new CarouselImage
+                {
+                    ImgUrl = _accessor.GetFilePath("copenhagen.jpg"),
+                    Description= "Copenhagen",
+                    Attribution= "Mads Amundsen"
+                },
+                new CarouselImage
+                {
+                    ImgUrl = _accessor.GetFilePath("mediterrian.jpg"),
+                    Description= "Mediterrian",
+                    Attribution= "Paolo Pavarotti"
+                },
             };
-
-
-            return ciList.AsEnumerable();
+            
+            return await Task.Run(() => ciList);
         }
         
     }
