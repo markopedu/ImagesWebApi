@@ -16,3 +16,7 @@ db: SamuraiAppData
 
     - install: dotnet ef = dotnet tool install --global dotnet-ef 
 
+    - dotnet ef migrations add newrelationships  -s ../ConsoleApp
+
+    - dotnet ef database update -s ../ConsoleApp     
+
