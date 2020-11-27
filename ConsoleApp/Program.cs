@@ -9,14 +9,24 @@ namespace ConsoleApp
 {
      internal class Program
     {
-        private static SamuraiContext context = new SamuraiContext();
+        private static SamuraiContext _context = new SamuraiContext();
         
-        private static Faker faker = new Faker();
+        private static Faker _faker = new Faker();
         private static void Main(string[] args)
         {
-            context.Database.EnsureCreated();
+            _context.Database.EnsureCreated();
             GetSamurais("Before Add:");
-            AddSamurai(20);
+            
+            Console.WriteLine("Do you want to add Samurais?");
+            var yes = Console.ReadKey();
+            if(yes.Key == ConsoleKey.Y)
+            {
+                AddSamurai(20);
+            } else
+            {
+                Console.WriteLine("Ok, enough of those Samurais!");
+            }
+            
             GetSamurais("After Add: ");
             Console.Write("Press any key...");
             Console.ReadKey();
@@ -26,25 +36,40 @@ namespace ConsoleApp
         {
             for (var i = 0; i < num; i++)
             {
-                var fName = faker.Name.FirstName(Name.Gender.Male);
+                var fName = _faker.Name.FirstName(Name.Gender.Male);
                 var samurai = new Samurai
                 {
                     Name = fName
                 };
 
-                context.Samurais.Add(samurai);
+                if (i % 5 == 0)
+                {
+                    var clan = new Clan
+                    {
+                        ClanName = _faker.Company.CompanyName()
+                    };
+                    
+                    _context.AddRange(samurai, clan);
+                    
+                }
+                else
+                {
+                    _context.Samurais.Add(samurai);
+                }
+
+                
             }
             
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         private static void GetSamurais(string text)
         {
-            var samurais = context.Samurais.ToList();
+            var samurais = _context.Samurais.OrderBy(x => x.Name).ToList();
             Console.WriteLine($"{text} Samurai count is {samurais.Count}");
             foreach (var samurai in samurais)
             {
-                Console.WriteLine(samurai.Name);
+                Console.WriteLine($"id: {samurai.Id}, name: {samurai.Name}");
             }
         }
     }
