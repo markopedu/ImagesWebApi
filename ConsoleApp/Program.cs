@@ -5,12 +5,29 @@ using SamuraiApp.Data;
 using SamuraiApp.Domain;
 using Bogus;
 using Bogus.DataSets;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ConsoleApp
 {
      internal class Program
     {
-        private static SamuraiContext _context = new SamuraiContext();
+        private static readonly string ConnectionString = "Server=127.0.0.1,1433;Database=SamuraiAppData;User Id=sa;Password=Secret!123;";
+        
+        private static readonly ILoggerFactory ConsoleLoggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder
+                .AddFilter((category, level) =>
+                    category == DbLoggerCategory.Database.Command.Name
+                    && level == LogLevel.Information)
+                .AddConsole();
+        
+        });
+        
+        private static SamuraiContext _context = new SamuraiContext(new DbContextOptionsBuilder<SamuraiContext>()
+                .UseSqlServer(ConnectionString)
+                .UseLoggerFactory(ConsoleLoggerFactory).EnableSensitiveDataLogging()
+                .Options);
         
         private static Faker _faker = new Faker();
         private static void Main(string[] args)

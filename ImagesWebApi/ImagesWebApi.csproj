@@ -13,5 +13,10 @@
       <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.10" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\SamuraiApp.Data\SamuraiApp.Data.csproj" />
+      <ProjectReference Include="..\SamuraiApp.Domain\SamuraiApp.Domain.csproj" />
+    </ItemGroup>
+
 
 </Project>

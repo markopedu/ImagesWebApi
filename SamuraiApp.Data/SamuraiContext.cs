@@ -10,7 +10,13 @@ namespace SamuraiApp.Data
      */
     public class SamuraiContext: DbContext
     {
-        private readonly string ConnectionString = "Server=127.0.0.1,1433;Database=SamuraiAppData;User Id=sa;Password=Secret!123;";
+     //   private readonly string ConnectionString = "Server=127.0.0.1,1433;Database=SamuraiAppData;User Id=sa;Password=Secret!123;";
+
+        public SamuraiContext(DbContextOptions<SamuraiContext> options) : base(options)
+        {
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+
+        }
         
         public DbSet<Samurai> Samurais { get; set; }
         public DbSet<Quote> Quotes { get; set; }
@@ -20,25 +26,17 @@ namespace SamuraiApp.Data
         public DbSet<Horse> Horses { get; set; }
         public DbSet<SamuraiBattleStat> SamuraiBattleStats { get; set; }
 
-        public static readonly ILoggerFactory ConsoleLoggerFactory = LoggerFactory.Create(builder =>
-        {
-            builder
-                .AddFilter((category, level) =>
-                    category == DbLoggerCategory.Database.Command.Name
-                    && level == LogLevel.Information)
-                .AddConsole();
-
-        });
+      
         
         
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder
-                .UseLoggerFactory(ConsoleLoggerFactory).EnableSensitiveDataLogging()
-                .UseSqlServer(ConnectionString);
-            base.OnConfiguring(optionsBuilder);
-        }
+        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        // {
+        //     optionsBuilder
+        //         .UseLoggerFactory(ConsoleLoggerFactory).EnableSensitiveDataLogging()
+        //         .UseSqlServer(ConnectionString);
+        //     base.OnConfiguring(optionsBuilder);
+        // }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
