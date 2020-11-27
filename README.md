@@ -20,3 +20,6 @@ db: SamuraiAppData
 
     - dotnet ef database update -s ../ConsoleApp     
 
+    - dotnet ef migrations add battlestats  -s ../ConsoleApp
+
+
