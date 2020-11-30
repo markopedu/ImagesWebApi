@@ -56,7 +56,7 @@ namespace ImagesWebApi
                 opt.UseSqlServer(Configuration.GetConnectionString("SamuraiConnection"))
                     .EnableSensitiveDataLogging();
             });
-
+            services.AddScoped<BusinessLogicData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

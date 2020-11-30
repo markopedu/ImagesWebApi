@@ -12,24 +12,24 @@ namespace ImagesWebApi.Controllers
     [Route("[controller]")]
     public class SamuraiController : Controller
     {
-        private readonly SamuraiContext _context;
+        private readonly BusinessLogicData _businessLogicData;
 
-        public SamuraiController(SamuraiContext context)
+        public SamuraiController(BusinessLogicData businessLogicData)
         {
-            _context = context;
+            _businessLogicData = businessLogicData;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Samurai>>> GetSamurais()
         {
-            return await _context.Samurais
-                .ToListAsync();
+           var samurais = await _businessLogicData.GetSamurais();
+           return Ok(samurais);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Samurai>> GetSamurai(int id)
         {
-            var samurai = await _context.Samurais.FindAsync(id);
+            var samurai = await _businessLogicData.GetSamurai(id);
 
             if (samurai == null)
             {
