@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ImagesWebApi.BackgroundServices;
 using ImagesWebApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -57,6 +58,9 @@ namespace ImagesWebApi
                     .EnableSensitiveDataLogging();
             });
             services.AddScoped<BusinessLogicData>();
+
+          //  services.AddHostedService<SamuraiBackgroundService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

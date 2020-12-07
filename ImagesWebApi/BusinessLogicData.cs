@@ -25,5 +25,11 @@ namespace ImagesWebApi
         {
            return await _context.Samurais.FindAsync(id);
         }
+
+        public async Task CreateNewSamurai(Samurai samurai)
+        {
+            await _context.Samurais.AddAsync(samurai);
+            await _context.SaveChangesAsync();
+        }
     }
 }
