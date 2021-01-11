@@ -1,23 +1,19 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using ImagesWebApi.BackgroundServices;
+using ImagesWebApi.Models.Dto;
 using ImagesWebApi.Services;
+using ImagesWebApi.Services.Cache;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SamuraiApp.Data;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+using StackExchange.Redis;
 
 namespace ImagesWebApi
 {
@@ -38,16 +34,13 @@ namespace ImagesWebApi
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        builder.WithOrigins("*");
-                    });
+                    builder => { builder.WithOrigins("*"); });
             });
-            
+
             services.AddControllers();
-            
+
             services.AddDirectoryBrowser();
-            
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddSingleton<ICarouselImageService, CarouselImageService>();
@@ -59,7 +52,12 @@ namespace ImagesWebApi
             });
             services.AddScoped<BusinessLogicData>();
 
-          //  services.AddHostedService<SamuraiBackgroundService>();
+            var redisConn = Configuration.GetValue<string>("RedisConnection");
+            services.AddSingleton<IConnectionMultiplexer>(x => ConnectionMultiplexer.Connect(redisConn));
+            
+            services.AddSingleton<ICacheService<string>, RedisCacheService>();
+            services.AddSingleton<ICacheService<SamuraiDto>, SamuraiCacheService>();
+            services.AddSingleton<ICacheService<IEnumerable<SamuraiDto>>, SamuraiCacheListService>();
             
         }
 

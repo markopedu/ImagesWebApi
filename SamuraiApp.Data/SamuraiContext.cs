@@ -10,11 +10,11 @@ namespace SamuraiApp.Data
      */
     public class SamuraiContext: DbContext
     {
-     //   private readonly string ConnectionString = "Server=127.0.0.1,1433;Database=SamuraiAppData;User Id=sa;Password=Secret!123;";
+       // private readonly string ConnectionString = "Server=127.0.0.1,1433;Database=SamuraiAppData;User Id=sa;Password=Secret!123;";
 
         public SamuraiContext(DbContextOptions<SamuraiContext> options) : base(options)
         {
-            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+          //  ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
         }
         

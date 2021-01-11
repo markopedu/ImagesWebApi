@@ -32,29 +32,66 @@ namespace ConsoleApp
         private static Faker _faker = new Faker();
         private static void Main(string[] args)
         {
-            _context.Database.EnsureCreated();
-            GetSamurais("Before Add:");
+            // var isCreated = _context.Database.EnsureCreated();
+            //
+            // if (isCreated)
+            // {
+            //     Console.WriteLine("IS CREATED!!");
+            // }
+            // else
+            // {
+            //     Console.WriteLine("NOT CREATED DB! :(");
+            // }
+
+            // var s = _context.Database.GenerateCreateScript();
+            //
+            // Console.WriteLine(s);
+
+            var canConnect = _context.Database.CanConnect();
+            
+            if (canConnect)
+            {
+                Console.Write("Can Connect!");
+            
+                // try
+                // {
+                //     _context.Database.Migrate();
+                // }
+                // catch (Exception exception)
+                // {
+                //     Console.WriteLine(exception.Message);
+                // }
+                
+            }
+            else
+            {
+                Console.WriteLine("Can't connect!! :(");
+                return;
+            }
+            
+            
+            // GetSamurais("Before Add:");
             
            // AddSamuraisToBattles();
 
-            var samuraiBattleStats = _context.SamuraiBattleStats.OrderByDescending(x => x.NoOfBattles).ToList();
-
-            foreach (var samuraiBattleStat in samuraiBattleStats)
+            // var samuraiBattleStats = _context.SamuraiBattleStats.OrderByDescending(x => x.NoOfBattles).ToList();
+            //
+            // foreach (var samuraiBattleStat in samuraiBattleStats)
+            // {
+            //    Console.WriteLine($"{samuraiBattleStat.Id}, {samuraiBattleStat.Name}, {samuraiBattleStat.NoOfBattles}");     
+            // }
+            
+            Console.WriteLine("Do you want to add Samurais?");
+            var yes = Console.ReadKey();
+            if(yes.Key == ConsoleKey.Y)
             {
-               Console.WriteLine($"{samuraiBattleStat.Id}, {samuraiBattleStat.Name}, {samuraiBattleStat.NoOfBattles}");     
+                AddSamurai(20);
+            } else
+            {
+                Console.WriteLine("Ok, enough of those Samurais!");
             }
             
-            // Console.WriteLine("Do you want to add Samurais?");
-            // var yes = Console.ReadKey();
-            // if(yes.Key == ConsoleKey.Y)
-            // {
-            //     AddSamurai(20);
-            // } else
-            // {
-            //     Console.WriteLine("Ok, enough of those Samurais!");
-            // }
-            //
-            // GetSamurais("After Add: ");
+            GetSamurais("After Add: ");
             Console.Write("Press any key...");
             Console.ReadKey();
         }
