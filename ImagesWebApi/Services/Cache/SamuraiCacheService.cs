@@ -22,11 +22,10 @@ namespace ImagesWebApi.Services.Cache
             return !r.IsNull ? JsonConvert.DeserializeObject<SamuraiDto>(r) : null;
         }
 
-        public async Task SetCacheValueAsync(string key, Func<SamuraiDto> value)
+        public async Task SetCacheValueAsync(string key, SamuraiDto value)
         {
             var db = _connectionMultiplexer.GetDatabase();
-            var val = value();
-            await db.StringSetAsync(key, JsonConvert.SerializeObject(val));
+            await db.StringSetAsync(key, JsonConvert.SerializeObject(value));
         }
 
         public async Task<bool> RemoveKey(string key)

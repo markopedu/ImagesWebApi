@@ -9,11 +9,11 @@ namespace ImagesWebApi.Controllers
     [Route("[controller]")]
     public class TestController : Controller
     {
-        private readonly ICacheService<string> _cacheService;
+        private readonly RedisCacheService _cacheService;
 
         public TestController(ICacheService<string> cacheService)
         {
-            _cacheService = cacheService;
+            _cacheService = cacheService as RedisCacheService;
         }
 
         [HttpGet]
@@ -36,7 +36,7 @@ namespace ImagesWebApi.Controllers
             var key = fc["key"];
             var value = fc["value"];
             
-            await _cacheService.SetCacheValueAsync(key, () => value);
+            await _cacheService.SetCacheValueAsync(key, value);
         }
     }
 }

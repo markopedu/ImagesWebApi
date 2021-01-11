@@ -19,10 +19,10 @@ namespace ImagesWebApi.Services.Cache
             return await db.StringGetAsync(key);
         }
 
-        public async Task SetCacheValueAsync(string key, Func<string> value)
+        public async Task SetCacheValueAsync(string key, string value)
         {
             var db = _connectionMultiplexer.GetDatabase();
-            await db.StringSetAsync(key, value());
+            await db.StringSetAsync(key, value);
         }
 
         public async Task<bool> RemoveKey(string key)

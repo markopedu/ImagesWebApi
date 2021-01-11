@@ -16,14 +16,14 @@ namespace ImagesWebApi.Controllers
         private const string CacheKeySamuraiList = "samurai.list";
 
         private readonly BusinessLogicData _businessLogicData;
-        private readonly ICacheService<SamuraiDto> _samuraiCacheService;
-        private readonly ICacheService<IEnumerable<SamuraiDto>> _samuraiCacheListService;
+        private readonly SamuraiCacheService _samuraiCacheService;
+        private readonly SamuraiCacheListService _samuraiCacheListService;
 
         public SamuraiController(BusinessLogicData businessLogicData, ICacheService<SamuraiDto> samuraiCacheService, ICacheService<IEnumerable<SamuraiDto>> samuraiCacheListService)
         {
             _businessLogicData = businessLogicData;
-            _samuraiCacheService = samuraiCacheService;
-            _samuraiCacheListService = samuraiCacheListService;
+            _samuraiCacheService = samuraiCacheService as SamuraiCacheService;
+            _samuraiCacheListService = samuraiCacheListService as SamuraiCacheListService;
         }
 
         [HttpGet]
@@ -35,18 +35,14 @@ namespace ImagesWebApi.Controllers
            
            var samurais = await _businessLogicData.GetSamurais();
 
-           Func<IEnumerable<SamuraiDto>> samuraiListFunc = () =>
+           var samuraiListDtos = samurais.Select(x => new SamuraiDto
            {
-               return samurais.Select(x => new SamuraiDto
-               {
-                   Name = x.Name
-               });
-           };
-               
-           await _samuraiCacheListService.SetCacheValueAsync(CacheKeySamuraiList, samuraiListFunc);
-           samuraiList = samuraiListFunc();
-           
-           return Ok(samuraiList);
+               Name = x.Name
+           });
+
+           await _samuraiCacheListService.SetCacheValueAsync(CacheKeySamuraiList, samuraiListDtos);
+
+           return Ok(samuraiListDtos);
         }
 
         [HttpGet("{id}")]
@@ -60,19 +56,16 @@ namespace ImagesWebApi.Controllers
             
             var samurai = await _businessLogicData.GetSamurai(id);
 
-            if (samurai == null)
-            {
-                return NotFound();
-            }
+            if (samurai == null) return NotFound();
 
-            Func<SamuraiDto> funcSamDto = () => new SamuraiDto
+            var samDto = new SamuraiDto
             {
                 Name = samurai.Name
             };
   
-            await _samuraiCacheService.SetCacheValueAsync(key, funcSamDto);
+            await _samuraiCacheService.SetCacheValueAsync(key, samDto);
             
-            return Ok(funcSamDto());
+            return Ok(samDto);
         }
     
     }

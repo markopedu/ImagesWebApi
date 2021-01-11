@@ -7,7 +7,7 @@ namespace ImagesWebApi.Services.Cache
     {
         Task<T> GetCacheValueAsync(string key);
 
-        Task SetCacheValueAsync(string key, Func<T> value);
+        Task SetCacheValueAsync(string key, T value);
         
         Task<bool> RemoveKey(string key);
     }
