@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using ImagesWebApi.BackgroundServices;
 using ImagesWebApi.Models.Dto;
 using ImagesWebApi.Services;
 using ImagesWebApi.Services.Cache;
@@ -59,6 +60,8 @@ namespace ImagesWebApi
                     .EnableSensitiveDataLogging();
             });
             services.AddScoped<BusinessLogicData>();
+            
+            services.AddHostedService<SamuraiBackgroundService>();
 
             var redisConn = Configuration.GetValue<string>("RedisConnection");
             services.AddSingleton<IConnectionMultiplexer>(x => ConnectionMultiplexer.Connect(redisConn));
@@ -66,7 +69,7 @@ namespace ImagesWebApi
             services.AddSingleton<ICacheService<string>, RedisCacheService>();
             services.AddSingleton<ICacheService<SamuraiDto>, SamuraiCacheService>();
             services.AddSingleton<ICacheService<IEnumerable<SamuraiDto>>, SamuraiCacheListService>();
-            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

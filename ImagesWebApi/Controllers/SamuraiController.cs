@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,8 +13,7 @@ namespace ImagesWebApi.Controllers
     [Route("[controller]")]
     public class SamuraiController : Controller
     {
-        private const string CacheKeySamuraiList = "samurai.list";
-        
+
         private readonly ILogger<SamuraiController> _logger;
 
         private readonly BusinessLogicData _businessLogicData;
@@ -33,7 +31,7 @@ namespace ImagesWebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Samurai>>> GetSamurais()
         {
-           var samuraiList = await _samuraiCacheListService.GetCacheValueAsync(CacheKeySamuraiList);
+           var samuraiList = await _samuraiCacheListService.GetCacheValueAsync(CacheKeys.CacheKeySamuraiList);
 
            if (samuraiList != null)
            {
@@ -48,7 +46,7 @@ namespace ImagesWebApi.Controllers
                Name = x.Name
            });
 
-           await _samuraiCacheListService.SetCacheValueAsync(CacheKeySamuraiList, samuraiListDtos);
+           await _samuraiCacheListService.SetCacheValueAsync(CacheKeys.CacheKeySamuraiList, samuraiListDtos);
 
            return Ok(samuraiListDtos);
         }
@@ -56,7 +54,7 @@ namespace ImagesWebApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Samurai>> GetSamurai(int id)
         {
-            var key = $"samurai.{id}";
+            var key = CacheKeys.CacheKeySamurai(id);
 
             var cachedSamurai = await _samuraiCacheService.GetCacheValueAsync(key);
 
