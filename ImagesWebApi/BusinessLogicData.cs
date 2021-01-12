@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SamuraiApp.Data;
@@ -18,6 +19,8 @@ namespace ImagesWebApi
         public async Task<IEnumerable<Samurai>> GetSamurais()
         {
             return await _context.Samurais
+                .Take(100)
+                .OrderBy(x => x.Id)
                 .ToListAsync();
         }
 

@@ -25,7 +25,7 @@ namespace ImagesWebApi.Services.Cache
         public async Task SetCacheValueAsync(string key, SamuraiDto value)
         {
             var db = _connectionMultiplexer.GetDatabase();
-            await db.StringSetAsync(key, JsonConvert.SerializeObject(value), TimeSpan.FromMinutes(1));
+            await db.StringSetAsync(key, JsonConvert.SerializeObject(value), TimeSpan.FromMinutes(100));
         }
 
         public async Task<bool> RemoveKey(string key)
