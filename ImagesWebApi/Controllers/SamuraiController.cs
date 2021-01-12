@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ImagesWebApi.Models.Dto;
 using ImagesWebApi.Services.Cache;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SamuraiApp.Domain;
 
 namespace ImagesWebApi.Controllers
@@ -14,13 +15,16 @@ namespace ImagesWebApi.Controllers
     public class SamuraiController : Controller
     {
         private const string CacheKeySamuraiList = "samurai.list";
+        
+        private readonly ILogger<SamuraiController> _logger;
 
         private readonly BusinessLogicData _businessLogicData;
         private readonly SamuraiCacheService _samuraiCacheService;
         private readonly SamuraiCacheListService _samuraiCacheListService;
 
-        public SamuraiController(BusinessLogicData businessLogicData, ICacheService<SamuraiDto> samuraiCacheService, ICacheService<IEnumerable<SamuraiDto>> samuraiCacheListService)
+        public SamuraiController(ILogger<SamuraiController> logger, BusinessLogicData businessLogicData, ICacheService<SamuraiDto> samuraiCacheService, ICacheService<IEnumerable<SamuraiDto>> samuraiCacheListService)
         {
+            _logger = logger;
             _businessLogicData = businessLogicData;
             _samuraiCacheService = samuraiCacheService as SamuraiCacheService;
             _samuraiCacheListService = samuraiCacheListService as SamuraiCacheListService;
@@ -31,7 +35,11 @@ namespace ImagesWebApi.Controllers
         {
            var samuraiList = await _samuraiCacheListService.GetCacheValueAsync(CacheKeySamuraiList);
 
-           if (samuraiList != null) return Ok(samuraiList);
+           if (samuraiList != null)
+           {
+               _logger.LogInformation("Samurai List from Redis Cache!");
+               return Ok(samuraiList);
+           }
            
            var samurais = await _businessLogicData.GetSamurais();
 

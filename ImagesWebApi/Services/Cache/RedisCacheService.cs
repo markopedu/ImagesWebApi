@@ -22,7 +22,7 @@ namespace ImagesWebApi.Services.Cache
         public async Task SetCacheValueAsync(string key, string value)
         {
             var db = _connectionMultiplexer.GetDatabase();
-            await db.StringSetAsync(key, value);
+            await db.StringSetAsync(key, value, TimeSpan.FromMinutes(1));
         }
 
         public async Task<bool> RemoveKey(string key)

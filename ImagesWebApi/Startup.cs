@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using ImagesWebApi.Models.Dto;
@@ -12,7 +11,9 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SamuraiApp.Data;
+using Serilog;
 using StackExchange.Redis;
 
 namespace ImagesWebApi
@@ -25,8 +26,8 @@ namespace ImagesWebApi
             HostingEnvironment = environment;
         }
 
-        public IConfiguration Configuration { get; }
-        public IWebHostEnvironment HostingEnvironment { get; }
+        private IConfiguration Configuration { get; }
+        private IWebHostEnvironment HostingEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -35,6 +36,13 @@ namespace ImagesWebApi
             {
                 options.AddDefaultPolicy(
                     builder => { builder.WithOrigins("*"); });
+            });
+
+            services.AddLogging(builder =>
+            {
+                builder.AddConfiguration(configuration: Configuration.GetSection("Logging"))
+                    .AddSerilog(new LoggerConfiguration().WriteTo.File("serilog.txt").CreateLogger())
+                    .AddConsole();
             });
 
             services.AddControllers();
